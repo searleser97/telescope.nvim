@@ -199,6 +199,7 @@ builtin.git_bcommits_range = require_on_exported_call("telescope.builtin.__git")
 ---   - `<C-a>`: creates a new branch, with confirmation prompt before creation
 ---   - `<C-d>`: deletes the currently selected branch, with confirmation prompt before deletion
 ---   - `<C-y>`: merges the currently selected branch, with confirmation prompt before deletion
+---   - `<C-l>`: shows the log of commits for the selected branch
 ---@param opts table: options to pass to the picker
 ---@field cwd string: specify the path of the repo
 ---@field use_file_path boolean: if we should use the current buffer git root (default: false)

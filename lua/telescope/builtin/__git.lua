@@ -62,8 +62,9 @@ end
 
 git.commits = function(opts)
   opts.entry_maker = vim.F.if_nil(opts.entry_maker, make_entry.gen_from_git_commits(opts))
+  local _git_command = opts.branch_path == nil and { "log", "--pretty=oneline", "--abbrev-commit" } or { "log", opts.branch_path, "--pretty=oneline", "--abbrev-commit" }
   opts.git_command =
-    vim.F.if_nil(opts.git_command, git_command({ "log", "--pretty=oneline", "--abbrev-commit", "--", "." }, opts))
+    vim.F.if_nil(opts.git_command, git_command(_git_command, opts))
 
   pickers
     .new(opts, {
@@ -81,6 +82,7 @@ git.commits = function(opts)
         map({ "i", "n" }, "<c-r>m", actions.git_reset_mixed)
         map({ "i", "n" }, "<c-r>s", actions.git_reset_soft)
         map({ "i", "n" }, "<c-r>h", actions.git_reset_hard)
+        map({ "i", "n" }, "<c-c>", actions.git_cherry_pick)
         return true
       end,
     })
@@ -350,6 +352,7 @@ git.branches = function(opts)
         map({ "i", "n" }, "<c-s>", actions.git_switch_branch)
         map({ "i", "n" }, "<c-d>", actions.git_delete_branch)
         map({ "i", "n" }, "<c-y>", actions.git_merge_branch)
+        map({ "i", "n" }, "<c-l>", actions.git_open_commits)
         return true
       end,
     })

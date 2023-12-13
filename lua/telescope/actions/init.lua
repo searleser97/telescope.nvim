@@ -65,6 +65,7 @@ local action_utils = require "telescope.actions.utils"
 local action_set = require "telescope.actions.set"
 local entry_display = require "telescope.pickers.entry_display"
 local from_entry = require "telescope.from_entry"
+local builtin = require "telescope.builtin"
 
 local transform_mod = require("telescope.actions.mt").transform_mod
 local resolver = require "telescope.config.resolve"
@@ -660,6 +661,40 @@ actions.git_switch_branch = function(prompt_bufnr)
     utils.notify("actions.git_switch_branch", {
       msg = string.format(
         "Error when switching to: %s. Git returned: '%s'",
+        selection.value,
+        table.concat(stderr, " ")
+      ),
+      level = "ERROR",
+    })
+  end
+end
+
+
+--- Open list of commits for selected branch with `<C-l>` in normal mode
+---@param prompt_bufnr number: The prompt bufnr
+actions.git_open_commits = function(prompt_bufnr)
+  local selection = action_state.get_selected_entry()
+  if selection == nil then
+    utils.__warn_no_selection "actions.git_open_commits"
+    return
+  end
+  actions.close(prompt_bufnr)
+  builtin.git_commits({ branch_path = selection.name })
+end
+
+actions.git_cherry_pick = function(prompt_bufnr)
+  local selection = action_state.get_selected_entry()
+  local cwd = action_state.get_current_picker(prompt_bufnr).cwd
+  local _, ret, stderr = utils.get_os_command_output({ "git", "cherry-pick", selection.value }, cwd)
+  if ret == 0 then
+    utils.notify("actions.git_cherry_pick", {
+      msg = string.format("Cherry Picked commit: '%s'", selection.value),
+      level = "INFO",
+    })
+  else
+    utils.notify("actions.git_cherry_pick", {
+      msg = string.format(
+        "Error when cherry picking: %s. Git returned: '%s'",
         selection.value,
         table.concat(stderr, " ")
       ),
