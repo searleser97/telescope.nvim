@@ -134,6 +134,13 @@ previewers.vimgrep = term_previewer.vimgrep
 --- case it's configured that way.
 previewers.qflist = term_previewer.qflist
 
+--- Provides a `previewer` which has the ability to display the diff with a parent commit.
+--- The preferred way of using this previewer is like this
+--- `require('telescope.config').values.git_delta_previewer`
+--- This will respect user configuration and will use `buffer_previewers` in
+--- case it's configured that way.
+previewers.git_delta_previewer = term_previewer.git_delta_previewer
+
 --- An interface to instantiate a new `buffer_previewer`.
 --- That means that the content actually lives inside a vim buffer which
 --- enables us more control over the actual content. For example, we can

@@ -65,12 +65,12 @@ git.commits = function(opts)
   local _git_command = opts.branch_path == nil and { "log", "--pretty=oneline", "--abbrev-commit" } or { "log", opts.branch_path, "--pretty=oneline", "--abbrev-commit" }
   opts.git_command =
     vim.F.if_nil(opts.git_command, git_command(_git_command, opts))
-
   pickers
     .new(opts, {
       prompt_title = "Git Commits",
       finder = finders.new_oneshot_job(opts.git_command, opts),
       previewer = {
+        previewers.git_delta_previewer.new(opts),
         previewers.git_commit_diff_to_parent.new(opts),
         previewers.git_commit_diff_to_head.new(opts),
         previewers.git_commit_diff_as_was.new(opts),

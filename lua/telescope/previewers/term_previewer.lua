@@ -342,4 +342,13 @@ previewers.qflist = defaulter(function(opts)
   }
 end, {})
 
+previewers.git_delta_previewer = defaulter(function(opts)
+  opts = opts or {}
+  return previewers.new_termopen_previewer {
+    get_command = function(entry)
+      return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!' }
+    end
+  }
+end, {})
+
 return previewers
